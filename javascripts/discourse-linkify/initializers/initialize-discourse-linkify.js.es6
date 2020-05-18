@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { traverseNodes, readInputList} from '../lib/utilities';
+import { traverseNodes } from '../lib/utilities';
 
 export default {
   name: 'discourse-linkify-prolog-predicates-initializer',
@@ -44,16 +44,8 @@ export default {
         this.inputs = {};
       };
   
-      let linkify = new Action('linked_words', createLink);
-      let actions = [linkify];
-      actions.forEach(readInputList);
-        
       api.decorateCooked($elem => {
-        actions.forEach(action => {
-          if (Object.keys(action.inputs).length > 0) {
-            traverseNodes($elem[0], action, skipTags, skipClasses)
-          }
-        });
+        traverseNodes($elem[0], createLink, skipTags, skipClasses);
       }, {'id': 'linkify-words-theme'});
     });
   }
