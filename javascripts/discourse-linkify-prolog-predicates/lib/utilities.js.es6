@@ -4,7 +4,7 @@ const executeRegex = function(regex, str) {
   if (!(regex instanceof RegExp)) {
     return;
   }
-  const match = regex.exec(str);
+  let match = regex.exec(str);
   if (match === null) {
     return;
   }
