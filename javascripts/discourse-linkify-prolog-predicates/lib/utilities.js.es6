@@ -21,31 +21,41 @@ const isValidPredicate = (pred) => {
     .catch(_ => null);
 };
 
+const modifyTextLoop = (createNode, text, matches, i) => {
+  if (i === matches.length) {
+    return null;
+  } else {
+    let match = matches[i];
+    let matchedLeftBoundary = match[1];
+    let matchedWord = match[2];
+    // We need to protect against multiple matches of the same word or phrase
+    if (match.index + matchedLeftBoundary.length + matchedWord.length > text.data.length) {
+      modifyTextLoop(createNode, text, matches, i + 1);
+    } else {
+      isValidPredicate(matchedWord).then((isValid) => {
+        if (isValid) {
+          text.splitText(match.index + matchedLeftBoundary.length);
+          text.nextSibling.splitText(matchedWord.length);
+          text.parentNode.replaceChild(
+            createNode(matchedWord,
+                       "https://www.swi-prolog.org/pldoc/doc_for?object=" + matchedWord),
+            text.nextSibling);
+        }
+        return true;
+      }).then(() => {
+        return modifyTextLoop(createNode, text, matches, i+1);
+      });
+    }
+  }
+};
+
 const modifyText = function(text, createNode) {
   const re = /(\s|[.;,!?…\([{]|^)((?:[a-z][a-zA-Z_]*:)?[a-z][a-zA-Z0-9_]*[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g;
   const matches = executeRegex(re, text.data);
   // Sort matches according to index, descending order
   // Got to work backwards not to muck up string
   const sortedMatches = matches.sort((m, n) => n.index - m.index);
-  for (let i = 0; i < sortedMatches.length; i++) {
-    let match = sortedMatches[i];
-    let matchedLeftBoundary = match[1];
-    let matchedWord = match[2];
-    // We need to protect against multiple matches of the same word or phrase
-    if (match.index + matchedLeftBoundary.length + matchedWord.length > text.data.length) {
-      continue;
-    }
-    isValidPredicate(matchedWord).then((isValid) => {
-      if (isValid) {
-        text.splitText(match.index + matchedLeftBoundary.length);
-        text.nextSibling.splitText(matchedWord.length);
-        text.parentNode.replaceChild(
-          createNode(matchedWord,
-                     "https://www.swi-prolog.org/pldoc/doc_for?object=" + matchedWord),
-          text.nextSibling);
-      }
-    });
-  }
+  modifyTextLoop(createNode, text, sortedMatches, 0);
 };
 
 const isSkippedClass = function(classes, skipClasses) {
