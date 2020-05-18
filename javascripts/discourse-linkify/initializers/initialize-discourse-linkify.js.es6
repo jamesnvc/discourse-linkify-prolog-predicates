@@ -46,7 +46,7 @@ export default {
   
       api.decorateCooked($elem => {
         traverseNodes($elem[0], createLink, skipTags, skipClasses);
-      }, {'id': 'linkify-words-theme'});
+      }, {'id': 'linkify-prolog-predicates-theme'});
     });
   }
-}
+};
