@@ -6,7 +6,7 @@ const executeRegex = function(regex, str) {
   }
   let match = regex.exec(str);
   if (match === null) {
-    return;
+    return matches;
   }
   do {
     matches.push(match);
