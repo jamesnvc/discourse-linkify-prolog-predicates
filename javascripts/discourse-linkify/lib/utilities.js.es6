@@ -4,7 +4,7 @@ const executeRegex = function(regex, str) {
   if (!(regex instanceof RegExp)) {
     return;
   }
-  let match = regex.exec(str);
+  const match = regex.exec(str);
   if (match === null) {
     return;
   }
@@ -12,6 +12,7 @@ const executeRegex = function(regex, str) {
     matches.push(match);
   }
   while (regex.global && (match = regex.exec(str)) !== null);
+  return matches;
 };
 
 const isValidPredicate = (pred) => {
@@ -21,7 +22,7 @@ const isValidPredicate = (pred) => {
 
 const modifyText = function(text, createNode) {
   const re = /(\s|[.;,!?…\([{]|^)((?:[a-z][a-zA-Z_]*:)?[a-z][a-zA-Z0-9_]*[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g;
-  let matches = executeRegex(re, text.data);
+  const matches = executeRegex(re, text.data);
   // Sort matches according to index, descending order
   // Got to work backwards not to muck up string
   const sortedMatches = matches.sort((m, n) => n.index - m.index);
