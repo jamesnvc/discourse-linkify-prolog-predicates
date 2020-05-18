@@ -16,7 +16,8 @@ const executeRegex = function(regex, str) {
 };
 
 const isValidPredicate = (pred) => {
-  return fetch(`https://www.swi-prolog.org/doc_link?for=${pred}`).then(resp => resp.ok && resp.json());
+  return fetch("https://www.swi-prolog.org/doc_link?for=" + pred)
+    .then(resp => resp.ok && resp.json());
 };
 
 const modifyText = function(text, createNode) {
@@ -39,7 +40,7 @@ const modifyText = function(text, createNode) {
         text.nextSibling.splitText(matchedWord.length);
         text.parentNode.replaceChild(
           createNode(matchedWord,
-                     `https://www.swi-prolog.org/pldoc/doc_for?object=${matchedWord}`),
+                     "https://www.swi-prolog.org/pldoc/doc_for?object=" + matchedWord),
           text.nextSibling);
       }
     });
