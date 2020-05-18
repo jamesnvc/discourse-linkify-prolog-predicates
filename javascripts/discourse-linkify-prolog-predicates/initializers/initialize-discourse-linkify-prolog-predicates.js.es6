@@ -6,12 +6,11 @@ export default {
   initialize(){
     withPluginApi("0.8.7", api => {
 
-      // roughly guided by https://stackoverflow.com/questions/8949445/javascript-bookmarklet-to-replace-text-with-a-link
       let skipTags = {
         'a': 1,
         'iframe': 1,
       };
-  
+
       settings.excluded_tags.split('|').forEach(tag => {
         tag = tag.trim().toLowerCase();
         if (tag !== '') {
@@ -27,7 +26,7 @@ export default {
           skipClasses[cls] = 1;
         }
       });
-      
+
       let createLink = function(text, url) {
         var link = document.createElement('a');
         link.innerHTML = text;
@@ -38,12 +37,6 @@ export default {
         return link;
       };
 
-      let Action = function(inputListName, method) {
-        this.inputListName = inputListName;
-        this.createNode = method;
-        this.inputs = {};
-      };
-  
       api.decorateCooked($elem => {
         traverseNodes($elem[0], createLink, skipTags, skipClasses);
       }, {'id': 'linkify-prolog-predicates-theme'});

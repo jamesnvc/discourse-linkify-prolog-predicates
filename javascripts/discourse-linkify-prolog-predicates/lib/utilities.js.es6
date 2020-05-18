@@ -16,8 +16,7 @@ const executeRegex = function(regex, str) {
 };
 
 const isValidPredicate = (pred) => {
-  return fetch(`https://www.swi-prolog.org/doc_link?for=${pred}`)
-    .then(resp => resp.ok && resp.json());
+  return fetch(`https://www.swi-prolog.org/doc_link?for=${pred}`).then(resp => resp.ok && resp.json());
 };
 
 const modifyText = function(text, createNode) {
