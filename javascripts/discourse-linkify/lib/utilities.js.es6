@@ -92,6 +92,10 @@ const replaceCapturedVariables = function(input, match) {
   return replaced;
 }
 
+const isValidURL = (url) => {
+  return fetch(url).then(resp => resp.ok && resp.json());
+};
+
 const modifyText = function(text, action) {
   const words = action.inputs;
   let inputRegexes = Object.keys(words).filter(isInputRegex);
@@ -120,11 +124,15 @@ const modifyText = function(text, action) {
     if (match.index + matchedLeftBoundary.length + matchedWord.length > text.data.length) {
       continue;
     }
-    text.splitText(match.index + matchedLeftBoundary.length);
-    text.nextSibling.splitText(matchedWord.length);
-    text.parentNode.replaceChild(action.createNode(matchedWord, value), text.nextSibling);
+    isValidURL(value).then((isValid) => {
+      if (isValid) {
+        text.splitText(match.index + matchedLeftBoundary.length);
+        text.nextSibling.splitText(matchedWord.length);
+        text.parentNode.replaceChild(action.createNode(matchedWord, value), text.nextSibling);
+      }
+    });
   }
-}
+};
 
 const isSkippedClass = function(classes, skipClasses) {
   // Return true if at least one of the classes should be skipped

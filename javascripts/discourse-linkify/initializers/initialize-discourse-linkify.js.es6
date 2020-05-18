@@ -2,7 +2,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { traverseNodes, readInputList} from '../lib/utilities';
 
 export default {
-  name: 'discourse-linkify-initializer',
+  name: 'discourse-linkify-prolog-predicates-initializer',
   initialize(){
     withPluginApi("0.8.7", api => {
 

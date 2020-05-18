@@ -1,6 +1,6 @@
 {
-  "name": "Auto linkify words",
-  "about_url": "https://meta.discourse.org/t/linkify-words-in-post-theme-component/82193",
-  "license_url": "https://github.com/discourse/discourse-linkify-words/blob/master/LICENSE",
+  "name": "Auto linkify Prolog predicates",
+  "about_url": "https://swi-prolog.discourse.group/t/added-linkify-words-in-post-theme/2352/14",
+  "license_url": "https://github.com/jamesnvc/discourse-linkify-words/blob/master/LICENSE",
   "component": true
 }
