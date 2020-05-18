@@ -1,6 +1,3 @@
-linked_words:
-  type: list
-  default: 'discourse,https://www.discourse.org|meta,https://meta.discourse.org'
 excluded_tags:
   type: list
   list_type: compact
