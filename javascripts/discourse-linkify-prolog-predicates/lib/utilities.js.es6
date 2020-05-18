@@ -69,4 +69,4 @@ const traverseNodes = function(elem, createNode, skipTags, skipClasses) {
   }
 };
 
-export { traverseNodes }
+export { traverseNodes };
