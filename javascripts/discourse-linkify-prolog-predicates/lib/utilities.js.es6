@@ -15,8 +15,11 @@ const executeRegex = function(regex, str) {
   return matches;
 };
 
+const percentEncode = (s) => encodeURIComponent(s).replace(/%2F/, '/');
+;
+
 const isValidPredicate = (pred) => {
-  return fetch("https://www.swi-prolog.org/doc_link?for=" + pred)
+  return fetch("https://www.swi-prolog.org/doc_link?for=" + percentEncode(pred))
     .then(resp => resp.ok && resp.json())
     .catch(_ => null);
 };
@@ -38,7 +41,7 @@ const modifyTextLoop = (createNode, text, matches, i) => {
           text.nextSibling.splitText(matchedWord.length);
           text.parentNode.replaceChild(
             createNode(matchedWord,
-                       "https://www.swi-prolog.org/pldoc/doc_for?object=" + matchedWord),
+                       "https://www.swi-prolog.org/pldoc/doc_for?object=" + percentEncode(matchedWord)),
             text.nextSibling);
         }
         return true;
@@ -50,12 +53,17 @@ const modifyTextLoop = (createNode, text, matches, i) => {
 };
 
 const modifyText = function(text, createNode) {
-  const re = /(\s|[.;,!?…\([{]|^)((?:[a-z][a-zA-Z_]*:)?[a-z][a-zA-Z0-9_]*[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g;
-  const matches = executeRegex(re, text.data);
-  // Sort matches according to index, descending order
-  // Got to work backwards not to muck up string
-  const sortedMatches = matches.sort((m, n) => n.index - m.index);
-  modifyTextLoop(createNode, text, sortedMatches, 0);
+  const res = [
+    /(\s|[.;,!?…\([{]|^)((?:[a-z][a-zA-Z_]*:)?[a-z][a-zA-Z0-9_]*[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g,
+    /(\s|[.;,!?…\([{]|^)([(][^)A-Za-z]+[)][/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g
+  ];
+  for (const re of res) {
+    const matches = executeRegex(re, text.data);
+    // Sort matches according to index, descending order
+    // Got to work backwards not to muck up string
+    const sortedMatches = matches.sort((m, n) => n.index - m.index);
+    modifyTextLoop(createNode, text, sortedMatches, 0);
+  }
 };
 
 const isSkippedClass = function(classes, skipClasses) {
