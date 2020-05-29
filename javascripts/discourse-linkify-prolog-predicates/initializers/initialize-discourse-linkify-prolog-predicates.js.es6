@@ -27,12 +27,13 @@ export default {
         }
       });
 
-      let createLink = function(text, url) {
+      let createLink = function(text, url, title) {
         var link = document.createElement('a');
         link.innerHTML = text;
         link.href = url;
         link.rel = 'nofollow';
         link.target = '_blank';
+        link.title = title;
         link.className = 'linkify-word no-track-link';
         return link;
       };

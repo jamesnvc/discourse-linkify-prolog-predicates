@@ -17,7 +17,7 @@ const executeRegex = function(regex, str) {
 
 const percentEncode = (s) => encodeURIComponent(s).replace(/%2F/, '/');
 
-const modifyText = (createNode, text, matches, i) => {
+const modifyText = (createNode, text, info, matches) => {
   for (const match of matches) {
     const matchedLeftBoundary = match[1];
     const matchedWord = match[2];
@@ -27,11 +27,15 @@ const modifyText = (createNode, text, matches, i) => {
           text.nextSibling.splitText(matchedWord.length);
           text.parentNode.replaceChild(
             createNode(matchedWord,
-                       "https://www.swi-prolog.org/pldoc/doc_for?object=" + percentEncode(matchedWord)),
+                       "https://www.swi-prolog.org/pldoc/doc_for?object=" + percentEncode(matchedWord),
+                       info[matchedWord].summary
+                      ),
             text.nextSibling);
     }
   }
 };
+
+const removeParens = (word) => word.replace(/^[(]/, '').replace(/[)][/]{1,2}[0-9]+$/, '');
 
 const findAndReplaceMatches = function(text, createNode) {
   const res = [
@@ -40,21 +44,22 @@ const findAndReplaceMatches = function(text, createNode) {
     /(\s|[.;,!?…\([{]|^)([^)A-Za-z]+[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g
   ];
   const matches = res.flatMap(re => executeRegex(re, text.data));
-  const matchedWords = matches.map(([_1, _2, word]) =>
-                                   word.replace(/^[(]/, '').replace(/[)]$/, ''));
+  const matchedWords = matches.map(([_1, _2, word]) => removeParens(word));
   fetch("https://www.swi-prolog.org/doc_link",
         {method: 'POST',
          headers: {'Content-Type': 'application/json'},
          body: JSON.stringify(matchedWords)})
     .then(resp => resp.json())
-    .then(info => new Set(Object.keys(info)))
-    .then(validPreds => {
+    .then(info => {
+      const validPreds = new Set(Object.entries(info)
+                                 .filter(([k, v]) => !!v)
+                                 .map(([k, _]) => k));
       // Sort matches according to index, descending order
       // Got to work backwards not to muck up string
       const sortedMatches = matches
-            .filter(p => validPreds.has(p))
+            .filter(p => validPreds.has(removeParens(p)))
             .sort((m, n) => n.index - m.index);
-      modifyText(createNode, text, sortedMatches);
+      modifyText(createNode, text, info, sortedMatches);
     });
 };
 
