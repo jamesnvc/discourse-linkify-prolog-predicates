@@ -45,7 +45,6 @@ const findAndReplaceMatches = function(text, createNode) {
   fetch("https://www.swi-prolog.org/doc_link",
         {method: 'POST',
          headers: {'Content-Type': 'application/json'},
-         mode: 'no-cors',
          body: JSON.stringify(matchedWords)})
     .then(resp => resp.json())
     .then(info => new Set(Object.keys(info)))
