@@ -56,7 +56,8 @@ const modifyTextLoop = (createNode, text, matches, i) => {
 const modifyText = function(text, createNode) {
   const res = [
     /(\s|[.;,!?…\([{]|^)((?:[a-z][a-zA-Z_]*:)?[a-z][a-zA-Z0-9_]*[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g,
-    /(\s|[.;,!?…\([{]|^)([(][^)A-Za-z]+[)][/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g
+    /(\s|[.;,!?…\([{]|^)([(][^)A-Za-z]+[)][/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g,
+    /(\s|[.;,!?…\([{]|^)([^)A-Za-z]+[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g
   ];
   for (const re of res) {
     const matches = executeRegex(re, text.data);
