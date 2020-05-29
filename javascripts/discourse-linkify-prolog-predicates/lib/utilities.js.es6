@@ -20,7 +20,7 @@ const percentEncode = (s) => encodeURIComponent(s).replace(/%2F/, '/');
 
 const isValidPredicate = (pred) => {
   return fetch("https://www.swi-prolog.org/doc_link?for=" +
-               percentEncode(pred.replace(/[()]/g, ''))
+               percentEncode(pred.replace(/[()]/g, '')))
     .then(resp => resp.ok && resp.json())
     .catch(_ => null);
 };
