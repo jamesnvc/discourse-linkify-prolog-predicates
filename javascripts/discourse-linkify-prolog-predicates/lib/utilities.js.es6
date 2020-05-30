@@ -52,7 +52,6 @@ const processNodes = (createNode, nodes) => {
   const matchedWords = nodeMatches
         .flatMap(([_, matches]) => matches)
         .map(([_1, _2, word]) => removeParens(word));
-  console.log("checking matches", [...new Set(matchedWords)]);
   return fetch("https://www.swi-prolog.org/doc_link",
         {method: 'POST',
          headers: {'Content-Type': 'application/json'},
@@ -62,9 +61,7 @@ const processNodes = (createNode, nodes) => {
       const validPreds = new Set(Object.entries(info)
                                  .filter(([k, v]) => !!v)
                                  .map(([k, _]) => k));
-      console.log("replacing valid preds", validPreds, "in");
       for (const [node, matches] of nodeMatches) {
-        console.log("node", node, "matches", matches);
         const sortedMatches = matches
               .filter(p => validPreds.has(removeParens(p[2])))
               .sort((m, n) => n.index - m.index);
