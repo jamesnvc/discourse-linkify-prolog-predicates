@@ -15,6 +15,8 @@ const executeRegex = function(regex, str) {
   return matches;
 };
 
+const removeParens = (word) => word.replace(/^[(]/, '').replace(/[)]([/]{1,2}[0-9]+)$/, '$1');
+
 const percentEncode = (s) => encodeURIComponent(s).replace(/%2F/, '/');
 
 const modifyText = (createNode, text, info, matches) => {
@@ -28,14 +30,12 @@ const modifyText = (createNode, text, info, matches) => {
           text.parentNode.replaceChild(
             createNode(matchedWord,
                        "https://www.swi-prolog.org/pldoc/doc_for?object=" + percentEncode(matchedWord),
-                       info[matchedWord].summary
+                       info[removeParens(matchedWord)].summary
                       ),
             text.nextSibling);
     }
   }
 };
-
-const removeParens = (word) => word.replace(/^[(]/, '').replace(/[)]([/]{1,2}[0-9]+)$/, '$1');
 
 const predicate_res = [
   /(\s|[.;,!?…\([{]|^)((?:[a-z][a-zA-Z_]*:)?[a-z][a-zA-Z0-9_]*[/]{1,2}[0-9][1-9]*)(?=[:.;,!?…\]})]|\s|$)/g,
