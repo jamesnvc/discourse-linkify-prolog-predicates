@@ -38,9 +38,9 @@ export default {
         return link;
       };
 
-      api.decorateCooked($elem => {
-        traverseNodes($elem[0], createLink, skipTags, skipClasses);
-      }, {'id': 'linkify-prolog-predicates-theme'});
+      api.decorateCooked(
+        $elem => traverseNodes($elem[0], createLink, skipTags, skipClasses),
+        {'id': 'linkify-prolog-predicates-theme'});
     });
   }
 };
