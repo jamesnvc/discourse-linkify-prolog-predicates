@@ -52,11 +52,11 @@ const processNodes = (createNode, nodes) => {
   const matchedWords = nodeMatches
         .flatMap(([_, matches]) => matches)
         .map(([_1, _2, word]) => removeParens(word));
-  console.log("nodes", nodes, "words", matchedWords);
+  console.log("nodes", nodes, "words", [...new Set(matchedWords)]);
   fetch("https://www.swi-prolog.org/doc_link",
         {method: 'POST',
          headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify(matchedWords)})
+         body: JSON.stringify([...new Set(matchedWords)])})
     .then(resp => resp.json())
     .then(info => {
       const validPreds = new Set(Object.entries(info)
