@@ -52,6 +52,7 @@ const processNodes = (createNode, nodes) => {
   const matchedWords = nodeMatches
         .flatMap(([_, matches]) => matches)
         .map(([_1, _2, word]) => removeParens(word));
+  console.log("nodes", nodes, "words", matchedWords);
   fetch("https://www.swi-prolog.org/doc_link",
         {method: 'POST',
          headers: {'Content-Type': 'application/json'},
@@ -78,7 +79,7 @@ const isSkippedClass = function(classes, skipClasses) {
   return classes && classes.split(" ").some(cls => cls in skipClasses);
 };
 
-const traverseNodesRec = function(elem, skipTags, skipClasses, nodes=[]) {
+const traverseNodesRec = function(elem, skipTags, skipClasses, nodes) {
   // work backwards so changes do not break iteration
   for(let i = elem.childNodes.length - 1; i >=0; i--) {
     let child = elem.childNodes[i];
